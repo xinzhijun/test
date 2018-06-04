@@ -1,16 +1,14 @@
-import java.util.HashSet;
-
 /**
  * JuniorArray1
  * Created by IntelliJ IDEA.
  *
  * @author Wang Qi
  * @version 1.0 2018/6/4 10:09
- * @see JuniorArray1_removeDuplicates
+ * @see JuniorArray1RemoveDuplicates
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorArray1_removeDuplicates {
+public class JuniorArray1RemoveDuplicates {
     public static void main(String[] args) {
         int[] nums = new int[]{0,0,1,1,1,2,2,3,3,4};
         int length = removeDuplicates(nums);

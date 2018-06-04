@@ -4,11 +4,11 @@
  *
  * @author Wang Qi
  * @version 1.0 2018/6/4 14:43
- * @see JuniorArray2_SellStock
+ * @see JuniorArray2SellStock
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorArray2_SellStock {
+public class JuniorArray2SellStock {
     public static void main(String[] args) {
         int[] nums = new int[]{1,3,6,5,5};
         int rs = maxProfit(nums);
