@@ -14,6 +14,27 @@ import java.util.Random;
  */
 
 public class Test2 {
+    static int o=10;
+    static Test2 test2 = new Test2();
+    static int a;
+    static int b=0;
+
+    static {
+        o=9;
+    }
+    static {
+        o=3;
+    }
+
+    public Test2() {
+        super();
+        a++;
+        b++;
+    }
+    public static Test2 getInstence() {
+        return test2;
+    }
+
     public static void v(int[] aa) {
         int[] ss = {3, 4, 5};
         aa = ss;
@@ -30,6 +51,8 @@ public class Test2 {
         System.out.println(uu.byteValue());
         System.out.println(a.getBytes().length);
         System.out.println(c.getBytes().length);
+        Test2 test2 = Test2.getInstence();
+        System.out.println(o+"  "+test2.a+"   "+test2.b);
 //        System.out.println(Md5Tools.MD5("amt=1000&code=889948&custMobile=13111111112&merchId=13111111112&orderId=2111111111&parentProductId=61&payAccount=6212260200077617724&period=1&platform=shandong1&repayAccount=6212260200077617724&subProductId=606004&gole_pool_wq").toUpperCase());
 //        System.out.println(Md5Tools.MD5("money=1000000&name=wq&platform=shandong1&gole_pool_wq").toUpperCase());
 //        System.out.println(Md5Tools.MD5("amount=16000&bankNo=6212260200077617724&contractId=CO201706120000006932&loanId=LO201707310000000868&mobile=13111111112&orderId=2222212222&payType=DK&planId=AM201708020000001406&platform=shandong1&type=R&gole_pool_wq").toUpperCase());
@@ -75,19 +98,19 @@ public class Test2 {
 //        int[] ss = {1, 9, 8, 5, 2, 2, 2, 1, 7, 2, 1};
 //        v(ss);
 //        System.out.println(ss[0]);
-        Long start = System.currentTimeMillis();
-        fast(ss);
+//        Long start = System.currentTimeMillis();
+//        fast(ss);
+////        select(ss);
+//        Long end = System.currentTimeMillis();
+//        System.out.println("time" + (end-start));
+//        Long start2 = System.currentTimeMillis();
 //        select(ss);
-        Long end = System.currentTimeMillis();
-        System.out.println("time" + (end-start));
-        Long start2 = System.currentTimeMillis();
-        select(ss);
-        Long end2 = System.currentTimeMillis();
-        System.out.println("time" + (end2-start2));
-        Long start3 = System.currentTimeMillis();
-        Bubble(ss);
-        Long end3 = System.currentTimeMillis();
-        System.out.println("time" + (end3-start3));
+//        Long end2 = System.currentTimeMillis();
+//        System.out.println("time" + (end2-start2));
+//        Long start3 = System.currentTimeMillis();
+//        Bubble(ss);
+//        Long end3 = System.currentTimeMillis();
+//        System.out.println("time" + (end3-start3));
 //        for (int i = 0; i < ss.length; i++) {
 //            System.out.print(ss[i] + ",");
 //        }

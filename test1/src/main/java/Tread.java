@@ -30,7 +30,7 @@ public class Tread extends Thread implements Serializable{
             e.printStackTrace();
         }
 
-        if( this.currentThread().getName().equals("C")){
+        if( Tread.currentThread().getName().equals("C")){
             System.out.println(this.getName());
         }else{
             System.out.print(this.getName());
