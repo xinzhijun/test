@@ -16,6 +16,7 @@ import java.util.stream.Stream;
  */
 
 public class Test2 extends Test{
+    private static int c=0;
     @Override
     public void print(String str) {
         System.out.println("嗨，" + str + ", 你终于找到我了22222！");
@@ -24,6 +25,10 @@ public class Test2 extends Test{
     @Override
     public String toString() {
         return "我是一个B对象！";
+    }
+
+    public static void increase(){
+        c++;
     }
 
     public static void main(String[] args){
@@ -36,5 +41,22 @@ public class Test2 extends Test{
         stream.filter((x) -> {
             return x % 2 == 0;
         }).forEach(System.out::println);
+
+//        for(int i=0;i<10000;i++){
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    increase();
+//                }
+//            }).start();
+//        }
+//        try {
+//            Thread.sleep(13000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(c);
+        System.out.println(2^2);
+        System.out.println(0^2);
     }
 }
