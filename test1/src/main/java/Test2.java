@@ -140,6 +140,17 @@ public class Test2 {
         }
     }
 
+    static void insert(int[] ss){
+        int j;
+        for(int i=1;i<ss.length;i++){
+            int temp = ss[i];
+            for(j=i;j>0&temp<ss[j-1];j--){
+                ss[j]=ss[j-1];
+            }
+            ss[j] =temp;
+        }
+    }
+
     static void fast(int[] ss) {
         int label = ss[ss.length - 1];
         int i = 0;
