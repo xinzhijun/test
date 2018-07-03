@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -86,16 +88,18 @@ public class Test2 {
 //        System.out.println(s == s2.intern());
 //        System.out.println(s1 == s2.intern());
 //        System.out.println(s2.intern());
-        int[] ss = new int[1000];
-        int[] aa = new int[1000];
-        int[] bb = new int[1000];
-        for(int i=0;i<ss.length;i++){
-            ss[i] = new Random().nextInt(100000);
-            aa[i] = new Random().nextInt(100000);
-            bb[i] = new Random().nextInt(100000);
-        }
+//        int[] ss = new int[1000];
+//        int[] aa = new int[1000];
+//        int[] bb = new int[1000];
+//        for(int i=0;i<ss.length;i++){
+//            ss[i] = new Random().nextInt(100000);
+//            aa[i] = new Random().nextInt(100000);
+//            bb[i] = new Random().nextInt(100000);
+//        }
 
-//        int[] ss = {1, 9, 8, 5, 2, 2, 2, 1, 7, 2, 1};
+        int[] ss = {1, 9, 8, 5, 2, 2, 2, 1, 7, 2, 1};
+        insert(ss);
+
 //        v(ss);
 //        System.out.println(ss[0]);
 //        Long start = System.currentTimeMillis();
@@ -111,9 +115,9 @@ public class Test2 {
 //        Bubble(ss);
 //        Long end3 = System.currentTimeMillis();
 //        System.out.println("time" + (end3-start3));
-//        for (int i = 0; i < ss.length; i++) {
-//            System.out.print(ss[i] + ",");
-//        }
+        for (int i = 0; i < ss.length; i++) {
+            System.out.print(ss[i] + ",");
+        }
     }
 
     static void Bubble(int[] ss) {
