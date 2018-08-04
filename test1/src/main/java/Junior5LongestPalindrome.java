@@ -1,16 +1,14 @@
-import java.util.HashMap;
-
 /**
  * JuniorLongestPalindrome
  * Created by IntelliJ IDEA.
  *
  * @author Wang Qi
  * @version 1.0 2018/7/26 15:52
- * @see JuniorLongestPalindrome
+ * @see Junior5LongestPalindrome
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorLongestPalindrome {
+public class Junior5LongestPalindrome {
     public static String longestPalindrome(String s) {
         if (s == null || s.length() < 1) return "";
         int start = 0, end = 0;

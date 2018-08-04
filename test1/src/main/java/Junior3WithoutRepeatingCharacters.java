@@ -7,11 +7,11 @@ import java.util.Map;
  *
  * @author Wang Qi
  * @version 1.0 2018/7/18 17:28
- * @see JuniorWithoutRepeatingCharacters
+ * @see Junior3WithoutRepeatingCharacters
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorWithoutRepeatingCharacters {
+public class Junior3WithoutRepeatingCharacters {
     public static int lengthOfLongestSubstring(String s) {
         int n = s.length(), ans = 0;
         int[] index = new int[128]; // current index of character

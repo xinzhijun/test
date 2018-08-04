@@ -4,11 +4,11 @@
  *
  * @author Wang Qi
  * @version 1.0 2018/8/1 14:16
- * @see JuniorReverseInt
+ * @see Junior7ReverseInt
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorReverseInt {
+public class Junior7ReverseInt {
     public int reverse(int x) {
         int rev = 0;
         while (x != 0) {

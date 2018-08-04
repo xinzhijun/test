@@ -4,11 +4,11 @@
  *
  * @author Wang Qi
  * @version 1.0 2018/7/16 18:08
- * @see JuniorAddTwoNumbers
+ * @see Junior2AddTwoNumbers
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorAddTwoNumbers {
+public class Junior2AddTwoNumbers {
     class ListNode {
         int val;
         ListNode next;

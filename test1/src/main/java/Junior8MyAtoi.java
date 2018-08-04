@@ -8,11 +8,11 @@ import java.util.regex.Pattern;
  *
  * @author Wang Qi
  * @version 1.0 2018/8/1 14:48
- * @see JuniorMyAtoi
+ * @see Junior8MyAtoi
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorMyAtoi {
+public class Junior8MyAtoi {
     private final static Pattern pattern = Pattern.compile("\\b(\\w{3}) *(\\w{4})\\b",Pattern.MULTILINE);
     public static int myAtoi(String str) {
         String[] ss = str.split(" ");

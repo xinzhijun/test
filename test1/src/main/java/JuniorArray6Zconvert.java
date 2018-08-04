@@ -4,11 +4,11 @@
  *
  * @author Wang Qi
  * @version 1.0 2018/7/28 17:22
- * @see JuniorArrayZconvert
+ * @see JuniorArray6Zconvert
  * To change this template use File | Settings | File Templates.
  */
 
-public class JuniorArrayZconvert {
+public class JuniorArray6Zconvert {
     public static String convert(String s, int numRows) {
         if (numRows == 1) return s;
         //外部规律numRows-2
