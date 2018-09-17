@@ -29,6 +29,7 @@ public class Junior23mergeKLists {
                 head.next =temp;
             }
             lists[1] =lists[1].next;
+
         }
         return null;
     }
