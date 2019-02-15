@@ -59,8 +59,8 @@ public class Test2 extends Test{
         System.out.println(2^2);
         System.out.println(0^2);
 
-        print(c++);
-        print(++c);
+//        print(c++);
+//        print(++c);
     }
     static void print(int c){
         int a;
