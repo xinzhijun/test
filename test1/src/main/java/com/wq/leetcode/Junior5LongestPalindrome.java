@@ -2,7 +2,9 @@ package com.wq.leetcode;
 
 /**
  * JuniorLongestPalindrome
- * Created by IntelliJ IDEA.
+ * 方法二：中心扩散法
+ * 中心扩散法的想法很简单：遍历每一个索引，以这个索引为中心，利用“回文串”中心对称的特点，往两边扩散，看最多能扩散多远。要注意一个细节：回文串的长度可能是奇数，也可能是偶数。
+ *
  *
  * @author Wang Qi
  * @version 1.0 2018/7/26 15:52
