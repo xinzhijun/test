@@ -1,8 +1,5 @@
 package com.wq.leetcode;
 
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * JuniorMyAtoi
@@ -15,27 +12,37 @@ import java.util.regex.Pattern;
  */
 
 public class Junior8MyAtoi {
-    private final static Pattern pattern = Pattern.compile("\\b(\\w{3}) *(\\w{4})\\b",Pattern.MULTILINE);
     public static int myAtoi(String str) {
-        String[] ss = str.split(" ");
-//        for(String s: ss){
-            Matcher matcher =  pattern.matcher(str);
-            MatchResult ms = null;
-            while (matcher.find()) {
-                ms = matcher.toMatchResult();
-                System.out.print("匹配对象的组结果：");
-                System.out.print(String.format("\n\t第%s组的结果是:%s",0,matcher.group(0)));
-                for (int i = 0; i < matcher.groupCount(); i++) {
-                    System.out.print(String.format("\n\t第%s组的结果是:%s",i+1,matcher.group(i+1)));
-                }
-                System.out.print("\n匹配的整个结果:");
-                System.out.println(ms.group());
+        str = str.trim();
+        if (str == null || str.length() == 0)
+            return 0;
+
+        char firstChar = str.charAt(0);
+        int sign = 1;
+        int start = 0;
+        long res = 0;
+        if (firstChar == '+') {
+            sign = 1;
+            start++;
+        } else if (firstChar == '-') {
+            sign = -1;
+            start++;
+        }
+
+        for (int i = start; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return (int) res * sign;
             }
-//        }
-        return 0;
+            res = res * 10 + str.charAt(i) - '0';
+            if (sign == 1 && res > Integer.MAX_VALUE)
+                return Integer.MAX_VALUE;
+            if (sign == -1 && res > Integer.MAX_VALUE)
+                return Integer.MIN_VALUE;
+        }
+        return (int) res * sign;
     }
 
     public static void main(String[] args){
-        myAtoi("dada ada adad adsda ad asdda adr3 fas daf fas fdsf 234 adda");
+        System.out.println(myAtoi("-34234"));
     }
 }
