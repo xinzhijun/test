@@ -2,6 +2,7 @@ package com.wq.leetcode;
 
 import javax.xml.stream.events.Characters;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * <Description>
@@ -17,29 +18,30 @@ public class Junior20ValidParentheses {
             return false;
         }
         HashMap<Character,Character> hashMap = new HashMap<>();
-        hashMap.put('(',')');
-        hashMap.put('[',']');
-        hashMap.put('{','}');
-        hashMap.put(')','a');
-        hashMap.put(']','b');
-        hashMap.put('}','c');
-        int r =s.length()/2;
-        int l =r-1;
-        while(l>-1&&r<s.length()){
-            if(hashMap.get(s.charAt(l))==s.charAt(r)){
-                l--;
-                r++;
-            }else if(l>0&&r<s.length()&& hashMap.get(s.charAt(l-1))==s.charAt(l)&&hashMap.get(s.charAt(r))==s.charAt(r+1)){
-                l-=2;
-                r+=2;
+        hashMap.put(')','(');
+        hashMap.put(']','[');
+        hashMap.put('}','{');
+        Stack<Character> stack = new Stack<>();
+        for(int i=0;i<s.length();i++){
+            char c = s.charAt(i);
+            if(hashMap.containsKey(c)){
+                Character  st  = stack.empty()?'-':stack.pop();
+                if(!st.equals(hashMap.get(c))){
+                    return false;
+                }
             }else{
-                return false;
+                stack.push(c);
             }
         }
-        return true;
+        if(stack.empty()){
+            return true;
+        }else{
+            return  false;
+        }
+
     }
 
     public static  void main(String[] args){
-        System.out.println(isValid("(([]){})"));
+        System.out.println(isValid("(]"));
     }
 }
