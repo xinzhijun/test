@@ -15,6 +15,9 @@ public class _A {
     public static void staticMethod(){
         System.out.println("A静态方法");
     }
+    {
+        System.out.println("wwwwwwwwww");
+    }
     public void nonStaticMethod(){
         System.out.println("A非静态方法");
     }

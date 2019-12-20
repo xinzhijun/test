@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class TwoSum {
     public static void main(String[] args) {
         int[] nums = new int[]{2, 7, 11, 15};
-        int[] rs = twoSum(nums, 9);
+        int[] rs = twoSum(nums, 18);
         for (int i = 0; i < rs.length; i++) {
             System.out.print(rs[i]);
         }

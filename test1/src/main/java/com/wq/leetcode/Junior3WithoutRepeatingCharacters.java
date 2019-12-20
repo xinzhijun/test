@@ -64,8 +64,21 @@ public class Junior3WithoutRepeatingCharacters {
         return ans;
     }
 
+    public static int test(String s){
+        int rs =0;
+        HashMap<Character,Integer> hashMap = new HashMap<>();
+        for(int i=0,j=0;i<s.length();i++){
+            if(hashMap.containsKey(s.charAt(i))){
+                j = Math.max(hashMap.get(s.charAt(i)),j);
+            }
+            rs = Math.max(rs,i-j+1);
+            hashMap.put(s.charAt(i),i+1);
+        }
+        return  rs;
+    }
+
     public static void main(String[] args){
-        String ss = "dvdf";
+        String ss = "abcabcbb";
         System.out.println(ass2(ss));
     }
 

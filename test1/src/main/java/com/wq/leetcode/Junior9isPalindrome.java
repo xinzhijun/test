@@ -34,7 +34,7 @@ public class Junior9isPalindrome {
     }
 
     public static void main(String[] args){
-        System.out.println(IsPalindrome(12));
+        System.out.println(IsPalindrome(121));
 
     }
 }

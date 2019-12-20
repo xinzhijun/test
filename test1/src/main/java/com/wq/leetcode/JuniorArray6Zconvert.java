@@ -40,6 +40,6 @@ public class JuniorArray6Zconvert {
 
     public static void main(String[] args) {
         System.out.println(4 << 1);
-        System.out.println(convert("ABCDE", 4));
+        System.out.println(convert("ABCDE", 3));
     }
 }
