@@ -32,6 +32,24 @@ public class Junior94BTreeInorder {
         return list;
     }
 
+    public List<Integer> inorderTraversal2(TreeNode root) {
+        ArrayList<Integer> list = new ArrayList<>();
+        get(root,list);
+        return list;
+    }
+
+    void get(TreeNode treeNode,List list){
+        if(treeNode!=null){
+            if(treeNode.left!=null){
+                get(treeNode.left,list);
+            }
+            list.add(treeNode.val);
+            if(treeNode.right!=null){
+                get(treeNode.right,list);
+            }
+        }
+    }
+
     class TreeNode{
         private TreeNode left;
         private TreeNode right;
