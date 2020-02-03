@@ -58,9 +58,9 @@ public class DoubleLink {
     @org.junit.Test
     public  void test() {
         DoubleLink root;
-        root = insert(null, 1);
-        root =insert(root, 2);
-        insert(root, 3);
+       insert(first, 2);
+        insert(first, 3);
+        insert(first, 4);
         getList(first);
         root = reverseList(first);
         getList(root);
