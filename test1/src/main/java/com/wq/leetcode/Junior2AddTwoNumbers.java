@@ -26,8 +26,8 @@ public class Junior2AddTwoNumbers {
         ListNode nextList = null;
         int mod = 0;
         while (l1 != null || l2 != null || mod > 0) {
-            boolean l1Status = l1 == null ? false : true;
-            boolean l2Status = l2 == null ? false : true;
+            boolean l1Status = l1 != null;
+            boolean l2Status = l2 != null;
             int i = (!l1Status ? 0 : l1.val) + (!l2Status ? 0 : l2.val) + mod;
             int j = i % 10;
             if (newList == null) {

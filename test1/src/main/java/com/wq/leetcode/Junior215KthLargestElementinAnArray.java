@@ -1,5 +1,6 @@
 package com.wq.leetcode;
 
+import java.util.PriorityQueue;
 import java.util.Random;
 
 /**
@@ -72,6 +73,24 @@ public class Junior215KthLargestElementinAnArray {
         nums[index1] = nums[index2];
         nums[index2] = temp;
     }
+
+    public int findKthLargest2(int[] nums, int k) {
+        // init heap 'the smallest element first'
+        PriorityQueue<Integer> heap =
+                new PriorityQueue<Integer>((n1, n2) -> n1 - n2);
+
+        // keep k largest elements in the heap
+        for (int n: nums) {
+            heap.add(n);
+            if (heap.size() > k)
+                heap.poll();
+        }
+
+        // output
+        return heap.poll();
+    }
+
+
 
     public  static void main(String[] args){
         int[] nums = new int[]{3,2,1,5,6,4};
