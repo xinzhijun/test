@@ -14,7 +14,7 @@ import java.util.List;
 public class Junior912SortanArray {
 
     public static List<Integer> sortArray(int[] nums) {
-        fast(nums,0,nums.length-1);
+        fast2(nums,0,nums.length-1);
         List<Integer> list = new ArrayList<>();
         for(int s:nums){
             list.add(s);
@@ -39,8 +39,11 @@ public class Junior912SortanArray {
                 nums[end]=tmp;
             }
         }
-        nums[r] = nums[start];
-        nums[start]=temp;
+        if(nums[r] < nums[start]){
+            nums[r] = nums[start];
+            nums[start]=temp;
+        }
+
         if(start>l){
             fast(nums,l,start-1);
         }
@@ -50,8 +53,40 @@ public class Junior912SortanArray {
 
     }
 
+   static void  fast2(int[] list,int left,int right){
+        int start=left,end =right;
+        int temp = list[right];
+        while(start<end){
+            while(list[start]<temp && start<end){
+                start++;
+            }
+            while(list[end]>temp && start<end){
+                end--;
+            }
+            if(start<end){
+                swap(list,start,end);
+            }
+        }
+        if(list[right] < list[start]){
+            list[right] = list[start];
+            list[start] = temp;
+        }
+
+        if(start>left){
+            fast2(list,left,start-1);
+        }
+        if(start<right){
+            fast2(list,start+1,right);
+        }
+    }
+   static void swap(int[] list,int l,int r){
+         int temp = list[l];
+         list[l] =list[r];
+         list[r] = temp;
+    }
+
     public static void main(String[] args){
-        int[] nums = new int[]{4,5};
+        int[] nums = new int[]{1,7,3,6,4,5};
         List list = sortArray(nums);
         System.out.println(list);
     }
