@@ -50,9 +50,9 @@ public class Junior94BTreeInorder {
         }
     }
 
-    class TreeNode{
-        private TreeNode left;
-        private TreeNode right;
-        private int val;
+    public class TreeNode{
+        public TreeNode left;
+        public TreeNode right;
+        public int val;
     }
 }
