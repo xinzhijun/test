@@ -47,7 +47,7 @@ public class Junior142LinkedListCycleII {
 //        listNode.next = listNode;
         listNode.next = new ListNode(1);
         listNode.next.next = new ListNode(8);
-//        listNode.next.next.next = listNode.next;
+        listNode.next.next.next = listNode.next;
         System.out.println(detectCycle(listNode).val);
     }
 }
