@@ -29,12 +29,27 @@ public class Junior24SwapNodesinPairs {
         return pre.next;
     }
 
+    public  static  ListNode swapPairs2(ListNode head) {
+        ListNode pre = new ListNode(-1);
+        pre.next = head;
+        ListNode tmp = pre;
+        while(tmp.next!=null && tmp.next.next!=null){
+            ListNode start = tmp.next;
+            ListNode end = tmp.next.next;
+            tmp.next = end;
+            start.next = end.next;
+            end.next = start;
+            tmp = start;
+        }
+        return pre.next;
+    }
+
     public static void main(String[] args){
         ListNode s = new ListNode(1);
         s.next =new ListNode(2);
         s.next.next =new ListNode(3);
         s.next.next.next =new ListNode(4);
-        ListNode  x =swapPairs(s);
+        ListNode  x =swapPairs2(s);
         System.out.println(x);
     }
 }

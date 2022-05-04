@@ -37,6 +37,20 @@ public class Junior11maxArea {
         return maxarea;
     }
 
+    public static int max(int[] ss){
+        int l=0,r=ss.length-1;
+        int area =0;
+        while(l<r){
+            area = Math.max(area,Math.min(ss[l],ss[r])*(r-l));
+            if(ss[l]<ss[r]){
+                l++;
+            }else{
+                r--;
+            }
+        }
+        return area;
+    }
+
     public static void main(String[] args){
         System.out.println(maxArea2(new int[]{1,8,6,2,5,4,8,3,7}));
 

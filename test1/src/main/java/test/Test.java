@@ -31,6 +31,12 @@ public class Test {
     public static void main(String[] args)
     {
         Test t2=new Test();
+        int j =0;
+        for(int i=1;i<=600;i++){
+            if(600%i==0){
+               System.out.println(i+"xxxx  "+(++j));
+            }
+        }
     }
 
 }
