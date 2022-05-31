@@ -60,7 +60,7 @@ public class MyHashMap {
         Node pre = null;
         for (Node node = table[hashValue]; node != null; node = node.next) {
             pre = node;
-            if (node.hash == hashValue && (node.key == hashValue)) {
+            if (node.hash == hashValue && (node.key == key)) {
                 int oldValue = node.value;
                 node.value = value;
                 return oldValue;
