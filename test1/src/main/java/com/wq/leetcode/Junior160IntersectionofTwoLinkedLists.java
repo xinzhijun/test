@@ -52,6 +52,16 @@ public class Junior160IntersectionofTwoLinkedLists {
         return headA;
     }
 
+    public static ListNode merge(ListNode a, ListNode b){
+        ListNode aa = a;
+        ListNode bb =b;
+        while(aa!=bb){
+            aa = aa!=null?aa.next:b;
+            bb = bb!=null?bb.next:a;
+        }
+        return aa;
+    }
+
     public static void main(String[] args){
         ListNode listNode = new ListNode(4);
         listNode.next = new ListNode(1);
@@ -59,6 +69,6 @@ public class Junior160IntersectionofTwoLinkedLists {
         ListNode  listNode2 = new ListNode(1);
         listNode2.next =new ListNode(4);
         listNode2.next.next = listNode.next.next;
-        System.out.println(getIntersectionNode(listNode,listNode2).val);
+        System.out.println(merge(listNode,listNode2));
     }
 }
