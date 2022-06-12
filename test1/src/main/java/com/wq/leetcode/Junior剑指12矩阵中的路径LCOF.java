@@ -27,4 +27,10 @@ public class Junior剑指12矩阵中的路径LCOF {
         s[l][r] = w[k];
         return rs;
     }
+
+    public static void main(String[] args) {
+        char[][] s=new char[1][1];
+        s[0][0]='\0';
+        System.out.println(s[0]);
+    }
 }
