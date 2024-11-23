@@ -12,7 +12,7 @@ package com.wq.leetcode;
  */
 
 public class BTree {
-    class Tree{
+    static class Tree{
         int data;
         Tree left;
         Tree right;

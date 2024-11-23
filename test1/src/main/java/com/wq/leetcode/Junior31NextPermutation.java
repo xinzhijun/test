@@ -53,6 +53,34 @@ public class Junior31NextPermutation {
         }
     }
 
+
+    public void nextPermutation2(int[] nums) {
+//        int length_1 = nums.length - 1;
+        for (int i = nums.length - 1; i >= 0; i--) {//避免越界，需要if (i == n - 1 这个条件
+//            int iplus1 = i + 1;
+//            int nums_i = nums[i];
+//            int nums_iplus1 = -100000;
+//            if (i < nums.length - 1) nums_iplus1 = nums[i + 1];
+
+            if (i == nums.length - 1 || nums[i] >= nums[i + 1]) {//找到第一个比右1小的元素才下一步
+                continue;
+            }
+            for (int k = i + 1; k < nums.length; k++) {//右1大于他并且右2小于等于他，则他与右1交换位置，然后把右1到结尾升序排序
+                //312->321,则(k == nums.length - 1)成立
+                if (nums[i] < nums[k] && (k == nums.length - 1 || nums[i] >= nums[k + 1])) {//避免越界，需要if ( && (k == n - 1 这个条件
+                    int temp = nums[k];
+                    nums[k] = nums[i];
+                    nums[i] = temp;
+                    break;//交换一次即可
+                }
+            }
+            Arrays.sort(nums, i + 1, nums.length);//排序：nums[i+1]...nums[nums.length-1]
+            return;
+        }
+        Arrays.sort(nums);//[3,2,1] 输出：[1,2,3]
+    }
+
+
     static void change(int[] nums,int a,int b){
         int tmp = nums[b];
         nums[b] = nums[a];
