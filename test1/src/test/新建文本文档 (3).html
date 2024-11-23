@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫抓老鼠</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            border: 2px solid #000;
+            overflow: hidden;
+        }
+
+        #cat {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+        }
+
+        #mouse {
+            position: absolute;
+            width: 10px;
+            height:10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <img id="cat" src="G:\\cat_normal.png" alt="猫图像">
+        <img id="mouse" src="G:\\mouse_normal.png" alt="老鼠图像">
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        const cat = document.getElementById('cat');
+        const mouse = document.getElementById('mouse');
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('keydown', (event) => {
+            // 根据按键调整老鼠的位置
+            switch (event.key) {
+                case 'ArrowUp':
+                    mouseY = Math.max(0, mouseY - 30);
+                    break;
+                case 'ArrowDown':
+                    mouseY = Math.min(gameContainer.clientHeight - mouse.clientHeight, mouseY + 30);
+                    break;
+                case 'ArrowLeft':
+                    mouseX = Math.max(0, mouseX - 30);
+                    break;
+                case 'ArrowRight':
+                    mouseX = Math.min(gameContainer.clientWidth - mouse.clientWidth, mouseX + 30);
+                    break;
+            }
+
+            // 更新老鼠的位置
+            updateMousePosition();
+
+            // 检查是否猫抓到老鼠
+            checkCatCaughtMouse();
+        });
+
+        function getRandomPosition() {
+            const x = Math.floor(Math.random() * (gameContainer.clientWidth - cat.clientWidth));
+            const y = Math.floor(Math.random() * (gameContainer.clientHeight - cat.clientHeight));
+            return { x, y };
+        }
+
+        function updateMousePosition() {
+            mouse.style.left = `${mouseX}px`;
+            mouse.style.top = `${mouseY}px`;
+        }
+
+        function moveCatTowardsMouse() {
+            const catX = parseFloat(cat.style.left) || 0;
+            const catY = parseFloat(cat.style.top) || 0;
+
+            const deltaX = mouseX - catX;
+            const deltaY = mouseY - catY;
+
+            const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+
+            // 计算猫的速度
+            const catSpeed = 1;
+            const ratio = catSpeed / distance;
+
+            // 更新猫的位置
+            cat.style.left = `${catX + ratio * deltaX}px`;
+            cat.style.top = `${catY + ratio * deltaY}px`;
+
+            // 在下一帧继续移动
+            requestAnimationFrame(moveCatTowardsMouse);
+
+            // 检查是否猫抓到老鼠
+            checkCatCaughtMouse();
+        }
+
+        function checkCatCaughtMouse() {
+            const catX = parseFloat(cat.style.left) || 0;
+            const catY = parseFloat(cat.style.top) || 0;
+
+            const mouseRect = mouse.getBoundingClientRect();
+            const catRect = cat.getBoundingClientRect();
+
+            if (
+                mouseRect.x < catRect.x + catRect.width &&
+                mouseRect.x + mouseRect.width > catRect.x &&
+                mouseRect.y < catRect.y + catRect.height &&
+                mouseRect.y + mouseRect.height > catRect.y
+            ) {
+                alert('猫抓到了老鼠，游戏结束！');
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            // 初始化老鼠和猫的位置，确保它们隔开一定距离
+            const mousePosition = getRandomPosition();
+            mouseX = mousePosition.x;
+            mouseY = mousePosition.y;
+
+            const catPosition = getRandomPosition();
+            cat.style.left = `${catPosition.x}px`;
+            cat.style.top = `${catPosition.y}px`;
+        }
+
+        function initializeGame() {
+            // 初始化老鼠和猫的位置
+            resetGame();
+
+            // 启动猫的追逐
+            moveCatTowardsMouse();
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>

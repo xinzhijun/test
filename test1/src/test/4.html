@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>猫抓老鼠</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            border: 2px solid #000;
+            overflow: hidden;
+        }
+
+        #cat {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+        }
+
+        #mouse {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <img id="cat" src="G:\\cat_normal.png" alt="猫图像">
+        <img id="mouse" src="G:\\mouse_normal.png" alt="老鼠图像">
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        const cat = document.getElementById('cat');
+        const mouse = document.getElementById('mouse');
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let catState = { status: 'normal', health: 100 };
+        let mouseState = { status: 'normal', health: 100 };
+
+        document.addEventListener('keydown', (event) => {
+            // 根据按键调整老鼠的位置
+            switch (event.key) {
+                case 'ArrowUp':
+                    mouseY = Math.max(0, mouseY - 30);
+                    break;
+                case 'ArrowDown':
+                    mouseY = Math.min(gameContainer.clientHeight - mouse.clientHeight, mouseY + 30);
+                    break;
+                case 'ArrowLeft':
+                    mouseX = Math.max(0, mouseX - 30);
+                    break;
+                case 'ArrowRight':
+                    mouseX = Math.min(gameContainer.clientWidth - mouse.clientWidth, mouseX + 30);
+                    break;
+            }
+
+            // 处理老鼠还击和猫防御
+            if (catState.status === 'caught') {
+                // 老鼠还击
+                if (event.key === 'a') {
+                    mouseState.status = 'counterattack';
+                    // 猫防御
+                		catState.status = 'defend';
+                    if (Math.random() < 0.1) {
+                    // 10%概率防御成功，猫不掉血
+                    	//mouseState.health -= 10;
+                    	 // 退后一格
+                    	mouseX -= 300;
+                    	mouseY -= 300;
+                		} else {
+                    // 防御失败，猫掉血
+                    catState.health -= 1;
+                   
+                     // 退后一格
+                    catX -= 30;
+                    catY -= 30;
+                	}
+              
+                  
+                }else{
+                		mouseState.health -= 1;
+                    	 // 退后一格
+                    mouseX -= 3;
+                    mouseY -= 3;
+                }
+                
+            } 
+
+            // 更新老鼠和猫的位置和状态
+            updateMousePosition();
+            updateCatPosition();
+            updateMouseImage();
+            updateCatImage();
+            updateHealthDisplay();
+
+            // 检查胜利条件
+            checkVictoryCondition();
+        });
+
+        function getRandomPosition() {
+            const x = Math.floor(Math.random() * (gameContainer.clientWidth - cat.clientWidth));
+            const y = Math.floor(Math.random() * (gameContainer.clientHeight - cat.clientHeight));
+            return { x, y };
+        }
+
+        function updateMousePosition() {
+            mouse.style.left = `${mouseX}px`;
+            mouse.style.top = `${mouseY}px`;
+            mouseState.status = 'normal';
+        }
+
+        function updateCatPosition() {
+            const catX = parseFloat(cat.style.left) || 0;
+            const catY = parseFloat(cat.style.top) || 0;
+
+            const deltaX = mouseX - catX;
+            const deltaY = mouseY - catY;
+
+            const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+
+            const catSpeed = 10;
+            const ratio = catSpeed / distance;
+
+            cat.style.left = `${catX + ratio * deltaX}px`;
+            cat.style.top = `${catY + ratio * deltaY}px`;
+            catState.status = 'normal';
+        }
+
+        function updateMouseImage() {
+            if (mouseState.status === 'normal') {
+                mouse.src = 'G:\\mouse_normal.png';
+            } else if (mouseState.status === 'counterattack') {
+                mouse.src = 'G:\\mouse_counterattack.png';
+                setTimeout(() => {
+                    mouseState.status = 'normal';
+                    updateMouseImage();
+                }, 1000); // 切换回正常状态，模拟还击后的处理
+            } else if (mouseState.status === 'caught') {
+                mouse.src = 'G:\\mouse_caught.png';
+            }
+        }
+
+        function updateCatImage() {
+            if (catState.status === 'normal') {
+                cat.src = 'G:\\cat_normal.png';
+            } else if (catState.status === 'defend') {
+                cat.src = 'G:\\cat_defend.png';
+                setTimeout(() => {
+                    catState.status = 'normal';
+                    updateCatImage();
+                }, 1000); // 切换回正常状态，模拟防御后的处理
+            } else if (catState.status === 'caught') {
+                cat.src = 'G:\\cat_caught.png';
+            }
+        }
+
+        function updateHealthDisplay() {
+            console.log(`猫的血量: ${catState.health}`);
+            console.log(`老鼠的血量: ${mouseState.health}`);
+        }
+
+        function moveCatTowardsMouse() {
+            const catX = parseFloat(cat.style.left) || 0;
+            const catY = parseFloat(cat.style.top) || 0;
+
+            const deltaX = mouseX - catX;
+            const deltaY = mouseY - catY;
+
+            const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+
+            // 计算猫的速度
+            const catSpeed = 1;
+            const ratio = catSpeed / distance;
+
+            // 更新猫的位置
+            cat.style.left = `${catX + ratio * deltaX}px`;
+            cat.style.top = `${catY + ratio * deltaY}px`;
+            requestAnimationFrame(moveCatTowardsMouse);
+
+            checkCatCaughtMouse();
+        }
+
+        function checkCatCaughtMouse() {
+            const catX = parseFloat(cat.style.left) || 0;
+            const catY = parseFloat(cat.style.top) || 0;
+
+            const mouseRect = mouse.getBoundingClientRect();
+            const catRect = cat.getBoundingClientRect();
+
+            if (
+                mouseRect.x < catRect.x + catRect.width &&
+                mouseRect.x + mouseRect.width > catRect.x &&
+                mouseRect.y < catRect.y + catRect.height &&
+                mouseRect.y + mouseRect.height > catRect.y
+            ) {
+                catState.status = 'caught';
+                mouseState.status = 'caught';
+                updateCatImage();
+                updateMouseImage();
+                //alert('猫抓到了老鼠，游戏结束！');
+                //resetGame();
+            }
+        }
+
+        function checkVictoryCondition() {
+            if (catState.health <= 0) {
+                alert('M win，game over！');
+                resetGame();
+            } else if (mouseState.health <= 0) {
+                alert('C win，game over！');
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            const mousePosition = getRandomPosition();
+            mouseX = mousePosition.x;
+            mouseY = mousePosition.y;
+
+            catState.status = 'normal';
+            mouseState.status = 'normal';
+            catState.health = 100;
+            mouseState.health = 100;
+
+            updateMousePosition();
+            updateCatPosition();
+            updateMouseImage();
+            updateCatImage();
+            updateHealthDisplay();
+        }
+
+        function initializeGame() {
+            resetGame();
+            moveCatTowardsMouse();
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
