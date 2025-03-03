@@ -455,8 +455,8 @@ public class Blockchain {
         try {
             jedis.set(address, mnemonic);
         } catch (Exception e) {
-            System.out.println("error：" + address+"助词："+mnemonic);
             storeMnemonic(new Jedis(REDIS_HOST, REDIS_PORT),  address,  mnemonic);
+            System.out.println("error：" + address+"助词："+mnemonic);
 //            e.printStackTrace();
         }
 //        System.out.println("助记词已存储：" + mnemonic);
