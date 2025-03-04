@@ -1,9 +1,6 @@
 package test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -19,6 +16,7 @@ import org.json.JSONObject;
 import org.web3j.crypto.*;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.ScanParams;
 import redis.clients.jedis.resps.ScanResult;
@@ -135,6 +133,17 @@ public class Blockchain {
                         return true;
                     }
                 }
+                String dd = Keys.toChecksumAddress(derivedETHAddress);
+                MnemonicRedisStorage(dd,mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
+                for(String a:inputETHAddress){
+                    isETHMatch = a.equalsIgnoreCase(dd);
+                    if(isETHMatch){
+                        Mail163Sender();
+                        System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"ETH:"+derivedETHAddress);
+                        return true;
+                    }
+                }
+
             }
 //                System.out.println("❌ 登录验证失败，地址不匹配！");
             return false;
@@ -160,12 +169,17 @@ public class Blockchain {
      * 通过助记词恢复 ETH 地址
      */
     private static String deriveETHAddress(byte[] seed) {
-        Bip32ECKeyPair masterKeyPair = Bip32ECKeyPair.generateKeyPair(seed);
-        int[] derivationPath = {44 | 0x80000000, 60 | 0x80000000, 0 | 0x80000000, 0, 0};
-        Bip32ECKeyPair childKeyPair = Bip32ECKeyPair.deriveKeyPair(masterKeyPair, derivationPath);
+        Bip32ECKeyPair masterKeypair = Bip32ECKeyPair.generateKeyPair(seed);
+        final int[] derivationPath = {44 | Bip32ECKeyPair.HARDENED_BIT, 60 | Bip32ECKeyPair.HARDENED_BIT,
+                0 | Bip32ECKeyPair.HARDENED_BIT, 0, 0};
+        Bip32ECKeyPair derivedKeyPair = Bip32ECKeyPair.deriveKeyPair(masterKeypair, derivationPath);
 
-        ECKeyPair ecKeyPair = ECKeyPair.create(childKeyPair.getPrivateKey());
-        return "0x" + Keys.getAddress(ecKeyPair);
+        // 4. 通过私钥生成公钥
+        ECKeyPair ecKeyPair = ECKeyPair.create(derivedKeyPair.getPrivateKey());
+
+        // 5. 计算以太坊地址（取公钥的 Keccak-256 哈希的后 40 位）
+        String address = Keys.getAddress(ecKeyPair);
+        return "0x" + address;
     }
 
     // 查询 BTC 余额（使用 Blockchair API）
@@ -350,7 +364,7 @@ public class Blockchain {
                 List<String> inputBTCOldAddress = Arrays.asList("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","1KTexdemPdxSBcG55heUuTjDRYqbC5ZL8H","12cbQLTFMXRnSzktFkuoG3eHoMeFtpTu3S","1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF","12cf1sN5nqvGQFd6QkPG4uMpeAbLvjiwmS","1GrwDkr33gT6LuumniYjKEGjTLhsL5kmqC","19jApdZ8dSfgEu9QiAcehKkG3KrasS87jD","1NT9W3GXv2SCmsk1QPS6gPqoGuQ6LVMZU4");
                 List<String> inputBtcBase58Address = Arrays.asList("32R6ieLkEbhz2CYBW8M5kLMHWsACC3qWXn","33ze68qZoBE9R4uMtRQGNnvgFTYN4sPBUq");
 
-                List<String> inputETHAddress = Arrays.asList("0x7758e507850da48cd47df1fb5f875c23e3340c50","0xcffad3200574698b78f32232aa9d63eabd290703","0x6262998Ced04146fA42253a5C0AF90CA02dfd2A3","0x28c6c06298d514db089934071355e5743bf21d60","0x136867b7e72fcef0a81b16c67db94ac4c44b6ae1","0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","0xa9ebedf2c4fc61d411dbd6c897ca7a4c33ca26ea","0xa7efae728d2936e78bda97dc267687568dd593f3","0xf89d7b9c864f589bbF53a82105107622B35EaA40","0x3cD751E6b0078Be393132286c442345e5DC49699","0xab97925eB84fe0260779F58B7cb08d77dcB1ee2B","0xf89d7b9c864f589bbF53a82105107622B35EaA40","0x5041ed759Dd4aFc3a72b8192C143F72f4724081A","0x28C6c06298d514Db089934071355E5743bf21d60");
+                List<String> inputETHAddress = Arrays.asList("0x7758e507850da48cd47df1fb5f875c23e3340c50","0xcffad3200574698b78f32232aa9d63eabd290703","0x6262998Ced04146fA42253a5C0AF90CA02dfd2A3","0x28c6c06298d514db089934071355e5743bf21d60","0x136867b7e72fcef0a81b16c67db94ac4c44b6ae1","0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","0xa9ebedf2c4fc61d411dbd6c897ca7a4c33ca26ea","0xa7efae728d2936e78bda97dc267687568dd593f3","0xf89d7b9c864f589bbF53a82105107622B35EaA40","0x3cD751E6b0078Be393132286c442345e5DC49699","0xab97925eB84fe0260779F58B7cb08d77dcB1ee2B","0xf89d7b9c864f589bbF53a82105107622B35EaA40","0x5041ed759Dd4aFc3a72b8192C143F72f4724081A","0x28C6c06298d514Db089934071355E5743bf21d60","0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48","0xAEB0c00D0125A8a788956ade4f4F12Ead9f65DDf");
 //                if(verifyWalletLogin(mnemonicWords, inputBtcNewAddress, null)){
 //                    break;
 //                }
