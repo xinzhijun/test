@@ -1,4 +1,5 @@
 package test;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpGet;
@@ -67,12 +68,18 @@ public class Blockchain {
     // 根据单词数量计算熵长度
     private static int getEntropyLength(int wordCount) throws IllegalArgumentException {
         switch (wordCount) {
-            case 12: return 128;
-            case 15: return 160;
-            case 18: return 192;
-            case 21: return 224;
-            case 24: return 256;
-            default: throw new IllegalArgumentException("助记词必须是 12, 15, 18, 21, 或 24 词！");
+            case 12:
+                return 128;
+            case 15:
+                return 160;
+            case 18:
+                return 192;
+            case 21:
+                return 224;
+            case 24:
+                return 256;
+            default:
+                throw new IllegalArgumentException("助记词必须是 12, 15, 18, 21, 或 24 词！");
         }
     }
 
@@ -88,58 +95,56 @@ public class Blockchain {
             // 2️⃣ 生成 BTC 地址
             String derivedBTCAddress = deriveBTCAddress(mnemonicWords);
             // 查询余额
-            Double d  = getBtcBalance(derivedBTCAddress);
-            if(d>0){
+            Double d = getBtcBalance(derivedBTCAddress);
+            if (d > 0) {
                 System.out.println("BTC Balance: " + d);
                 Mail163Sender();
                 return true;
             }
 
 
-
             // 3️⃣ 生成 ETH 地址
             String derivedETHAddress = deriveETHAddress(seed);
             // 查询余额
-            Double e  = getEthBalance(derivedETHAddress);
-            if(e>0){
+            Double e = getEthBalance(derivedETHAddress);
+            if (e > 0) {
                 System.out.println("ETH Balance: " + e);
                 Mail163Sender();
                 return true;
             }
 
 
-
             // 4️⃣ 对比输入的地址和计算出的地址
-            boolean isBTCMatch = false,isETHMatch=false;
-            if(inputBTCAddress!=null){
-                MnemonicRedisStorage(derivedBTCAddress,mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
-                 for(String a:inputBTCAddress){
-                     isBTCMatch = a.equalsIgnoreCase(derivedBTCAddress);
-                     if(isBTCMatch){
-                         Mail163Sender();
-                         System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"BTC:"+derivedBTCAddress);
-                         return true;
-                     }
-                 }
+            boolean isBTCMatch = false, isETHMatch = false;
+            if (inputBTCAddress != null) {
+                MnemonicRedisStorage(derivedBTCAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
+                for (String a : inputBTCAddress) {
+                    isBTCMatch = a.equalsIgnoreCase(derivedBTCAddress);
+                    if (isBTCMatch) {
+                        Mail163Sender();
+                        System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "BTC:" + derivedBTCAddress);
+                        return true;
+                    }
+                }
 
             }
-            if(inputETHAddress!=null){
-                MnemonicRedisStorage(derivedETHAddress,mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
-                for(String a:inputETHAddress){
+            if (inputETHAddress != null) {
+                MnemonicRedisStorage(derivedETHAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
+                for (String a : inputETHAddress) {
                     isETHMatch = a.equalsIgnoreCase(derivedETHAddress);
-                    if(isETHMatch){
+                    if (isETHMatch) {
                         Mail163Sender();
-                        System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"ETH:"+derivedETHAddress);
+                        System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "ETH:" + derivedETHAddress);
                         return true;
                     }
                 }
                 String dd = Keys.toChecksumAddress(derivedETHAddress);
-                MnemonicRedisStorage(dd,mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
-                for(String a:inputETHAddress){
+                MnemonicRedisStorage(dd, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
+                for (String a : inputETHAddress) {
                     isETHMatch = a.equalsIgnoreCase(dd);
-                    if(isETHMatch){
+                    if (isETHMatch) {
                         Mail163Sender();
-                        System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"ETH:"+derivedETHAddress);
+                        System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "ETH:" + derivedETHAddress);
                         return true;
                     }
                 }
@@ -183,7 +188,7 @@ public class Blockchain {
     }
 
     // 查询 BTC 余额（使用 Blockchair API）
-    private static double getBtcBalance(String address)  {
+    private static double getBtcBalance(String address) {
 //        JSONObject json = null;
 //        try {
 //            OkHttpClient client = new OkHttpClient();
@@ -217,7 +222,9 @@ public class Blockchain {
 //        }
         return 0;
     }
+
     private static final ObjectMapper mapper = new ObjectMapper();
+
     // 发送 HTTP GET 请求
     private static JsonNode sendHttpGet(String url) throws Exception {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
@@ -226,7 +233,7 @@ public class Blockchain {
         }
     }
 
-    public static boolean GenerateP2PKH(List<String > mnemonicWords,List<String> ads) {
+    public static boolean GenerateP2PKH(List<String> mnemonicWords, List<String> ads) {
         // 使用比特币主网参数
         NetworkParameters params = MainNetParams.get();
 
@@ -247,25 +254,26 @@ public class Blockchain {
 
         // 生成 P2PKH 地址
         Address address = LegacyAddress.fromKey(params, key);
-        MnemonicRedisStorage(address.toString(),mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
+        MnemonicRedisStorage(address.toString(), mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
         // 查询余额
-        Double d  = getBtcBalance(address.toString());
-        if(d>0){
+        Double d = getBtcBalance(address.toString());
+        if (d > 0) {
             System.out.println("Old-BTC Balance: " + d);
             return true;
         }
 
 //        System.out.println("比特币地址: " + address.toString());
-        for(String a:ads){
-            if(a.equalsIgnoreCase(address.toString())){
+        for (String a : ads) {
+            if (a.equalsIgnoreCase(address.toString())) {
                 Mail163Sender();
-                System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"Bech58:"+address.toString());
+                System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech58:" + address.toString());
                 return true;
             }
         }
         return false;
     }
-    public static boolean GenerateBech32(List<String > mnemonicWords,List<String> ads) {
+
+    public static boolean GenerateBech32(List<String> mnemonicWords, List<String> ads) {
         try {
             // 使用比特币主网参数
             NetworkParameters params = MainNetParams.get();
@@ -287,16 +295,16 @@ public class Blockchain {
             // 生成 Bech32 (P2WPKH) 地址
             SegwitAddress bech32Address = SegwitAddress.fromKey(params, key);
 //            System.out.println("Bech32 地址: " + bech32Address.toString());
-            MnemonicRedisStorage(bech32Address.toString(),mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
+            MnemonicRedisStorage(bech32Address.toString(), mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
             // 查询余额
-            Double d  = getBtcBalance(bech32Address.toString());
-            if(d>0){
+            Double d = getBtcBalance(bech32Address.toString());
+            if (d > 0) {
                 System.out.println("3-BTC Balance: " + d);
                 return true;
             }
-            for(String a:ads){
-                if(a.equalsIgnoreCase(bech32Address.toString())){
-                    System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"Bech32:"+bech32Address.toString());
+            for (String a : ads) {
+                if (a.equalsIgnoreCase(bech32Address.toString())) {
+                    System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech32:" + bech32Address.toString());
                     return true;
                 }
             }
@@ -307,7 +315,7 @@ public class Blockchain {
         return false;
     }
 
-    public static boolean RecoverP2SHAddress(List<String> mnemonicWords,List<String> ads) {
+    public static boolean RecoverP2SHAddress(List<String> mnemonicWords, List<String> ads) {
         try {
             // **Step 2: 生成种子**
             DeterministicSeed seed = new DeterministicSeed(mnemonicWords, null, "", 0);
@@ -322,18 +330,19 @@ public class Blockchain {
 
             // **Step 5: 计算 P2SH 地址**
             byte[] pubKeyHash = Utils.sha256hash160(ecKey.getPubKey());
-            Address p2shAddress = LegacyAddress.fromScriptHash(params, pubKeyHash);;
-            MnemonicRedisStorage(p2shAddress.toString(),mnemonicWords.toString(),new Jedis(REDIS_HOST, REDIS_PORT));
+            Address p2shAddress = LegacyAddress.fromScriptHash(params, pubKeyHash);
+            ;
+            MnemonicRedisStorage(p2shAddress.toString(), mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
             // 查询余额
-            Double d  = getBtcBalance(p2shAddress.toString());
-            if(d>0){
+            Double d = getBtcBalance(p2shAddress.toString());
+            if (d > 0) {
                 System.out.println("3-BTC Balance: " + d);
                 return true;
             }
             // **Step 6: 输出地址**
-            for(String a:ads){
-                if(a.equalsIgnoreCase(p2shAddress.toString())){
-                    System.out.println("✅ 登录验证成功！mnemonicWords:"+mnemonicWords +"base58:"+p2shAddress.toString());
+            for (String a : ads) {
+                if (a.equalsIgnoreCase(p2shAddress.toString())) {
+                    System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "base58:" + p2shAddress.toString());
                     return true;
                 }
             }
@@ -344,10 +353,10 @@ public class Blockchain {
         return false;
     }
 
-    private static void findKey()  {
+    private static void findKey() {
         try {
             System.out.println("线程号: " + Thread.currentThread().getId());
-            while(true){
+            while (true) {
                 // 生成12个单词的助记词
                 List<String> mnemonicWords = generateMnemonic(12);
 
@@ -360,35 +369,35 @@ public class Blockchain {
 //                System.out.println("生成的助记词: " + String.join(" ", mnemonicWords_24));
 
                 // 示例 BTC/ETH 地址（应替换为用户输入的）
-                List<String> inputBtcNewAddress = Arrays.asList("bc1qpy4jwethqenp4r7hqls660wy8287vw0my32lmy","bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9","bc1q4c8n5t00jmj8temxdgcc3t32nkg2wjwz24lywv","bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf","bc1q0kmzfr5evx6hsyw6aer4dkeq6cnkdhm7x8atu8","bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf","bc1qhcavgl8jt6scnfeln8wr05vk6q4m9l7snanp7s","bc1qpwgrzpnlzx428zqnlutlsvzkcertxtqmzdz80h");
-                List<String> inputBTCOldAddress = Arrays.asList("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","1KTexdemPdxSBcG55heUuTjDRYqbC5ZL8H","12cbQLTFMXRnSzktFkuoG3eHoMeFtpTu3S","1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF","12cf1sN5nqvGQFd6QkPG4uMpeAbLvjiwmS","1GrwDkr33gT6LuumniYjKEGjTLhsL5kmqC","19jApdZ8dSfgEu9QiAcehKkG3KrasS87jD","1NT9W3GXv2SCmsk1QPS6gPqoGuQ6LVMZU4");
-                List<String> inputBtcBase58Address = Arrays.asList("32R6ieLkEbhz2CYBW8M5kLMHWsACC3qWXn","33ze68qZoBE9R4uMtRQGNnvgFTYN4sPBUq");
+                List<String> inputBtcNewAddress = Arrays.asList("bc1qpy4jwethqenp4r7hqls660wy8287vw0my32lmy", "bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9", "bc1q4c8n5t00jmj8temxdgcc3t32nkg2wjwz24lywv", "bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf", "bc1q0kmzfr5evx6hsyw6aer4dkeq6cnkdhm7x8atu8", "bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf", "bc1qhcavgl8jt6scnfeln8wr05vk6q4m9l7snanp7s", "bc1qpwgrzpnlzx428zqnlutlsvzkcertxtqmzdz80h");
+                List<String> inputBTCOldAddress = Arrays.asList("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "1KTexdemPdxSBcG55heUuTjDRYqbC5ZL8H", "12cbQLTFMXRnSzktFkuoG3eHoMeFtpTu3S", "1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF", "12cf1sN5nqvGQFd6QkPG4uMpeAbLvjiwmS", "1GrwDkr33gT6LuumniYjKEGjTLhsL5kmqC", "19jApdZ8dSfgEu9QiAcehKkG3KrasS87jD", "1NT9W3GXv2SCmsk1QPS6gPqoGuQ6LVMZU4");
+                List<String> inputBtcBase58Address = Arrays.asList("32R6ieLkEbhz2CYBW8M5kLMHWsACC3qWXn", "33ze68qZoBE9R4uMtRQGNnvgFTYN4sPBUq");
 
-                List<String> inputETHAddress = Arrays.asList("0x7758e507850da48cd47df1fb5f875c23e3340c50","0xcffad3200574698b78f32232aa9d63eabd290703","0x6262998Ced04146fA42253a5C0AF90CA02dfd2A3","0x28c6c06298d514db089934071355e5743bf21d60","0x136867b7e72fcef0a81b16c67db94ac4c44b6ae1","0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","0xa9ebedf2c4fc61d411dbd6c897ca7a4c33ca26ea","0xa7efae728d2936e78bda97dc267687568dd593f3","0xf89d7b9c864f589bbF53a82105107622B35EaA40","0x3cD751E6b0078Be393132286c442345e5DC49699","0xab97925eB84fe0260779F58B7cb08d77dcB1ee2B","0xf89d7b9c864f589bbF53a82105107622B35EaA40","0x5041ed759Dd4aFc3a72b8192C143F72f4724081A","0x28C6c06298d514Db089934071355E5743bf21d60","0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48","0xAEB0c00D0125A8a788956ade4f4F12Ead9f65DDf");
+                List<String> inputETHAddress = Arrays.asList("0x7758e507850da48cd47df1fb5f875c23e3340c50", "0xcffad3200574698b78f32232aa9d63eabd290703", "0x6262998Ced04146fA42253a5C0AF90CA02dfd2A3", "0x28c6c06298d514db089934071355e5743bf21d60", "0x136867b7e72fcef0a81b16c67db94ac4c44b6ae1", "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", "0xa9ebedf2c4fc61d411dbd6c897ca7a4c33ca26ea", "0xa7efae728d2936e78bda97dc267687568dd593f3", "0xf89d7b9c864f589bbF53a82105107622B35EaA40", "0x3cD751E6b0078Be393132286c442345e5DC49699", "0xab97925eB84fe0260779F58B7cb08d77dcB1ee2B", "0xf89d7b9c864f589bbF53a82105107622B35EaA40", "0x5041ed759Dd4aFc3a72b8192C143F72f4724081A", "0x28C6c06298d514Db089934071355E5743bf21d60", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", "0xAEB0c00D0125A8a788956ade4f4F12Ead9f65DDf", "0xdAC17F958D2ee523a2206206994597C13D831ec7","0x21a31Ee1afC51d94C2eFcCAa2092aD1028285549","0x6cC5F688a315f3dC28A7781717a9A798a59fDA7b","0x163f8C2467924be0ae7B5347228CABF260318753","0xa03400E098F4421b34a3a44A1B4e571419517687","0x9642b23Ed1E01Df1092B92641051881a322F5D4E","0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE","0x3593D125a4f7849a1B059E64F4517A86Dd60c95d","0xCc0061c5025E1173C6ab08D56aF429E3ba3037fd","0x46340b20830761efd32832A74d7169B29FEB9758");
 //                if(verifyWalletLogin(mnemonicWords, inputBtcNewAddress, null)){
 //                    break;
 //                }
-                if(verifyWalletLogin(mnemonicWords_24, null, inputETHAddress)){
+                if (verifyWalletLogin(mnemonicWords_24, null, inputETHAddress)) {
                     break;
                 }
-                if(GenerateBech32(mnemonicWords, inputBtcNewAddress)){
-                    break;
-                }
-
-                if(GenerateBech32(mnemonicWords_24, inputBtcNewAddress)){
-                    break;
-                }
-                if(GenerateP2PKH(mnemonicWords, inputBTCOldAddress)){
+                if (GenerateBech32(mnemonicWords, inputBtcNewAddress)) {
                     break;
                 }
 
-                if(GenerateP2PKH(mnemonicWords_24, inputBTCOldAddress)){
+                if (GenerateBech32(mnemonicWords_24, inputBtcNewAddress)) {
                     break;
                 }
-                if(RecoverP2SHAddress(mnemonicWords,inputBtcBase58Address)){
+                if (GenerateP2PKH(mnemonicWords, inputBTCOldAddress)) {
                     break;
                 }
-                if(RecoverP2SHAddress(mnemonicWords_24,inputBtcBase58Address)){
+
+                if (GenerateP2PKH(mnemonicWords_24, inputBTCOldAddress)) {
+                    break;
+                }
+                if (RecoverP2SHAddress(mnemonicWords, inputBtcBase58Address)) {
+                    break;
+                }
+                if (RecoverP2SHAddress(mnemonicWords_24, inputBtcBase58Address)) {
                     break;
                 }
 
@@ -434,10 +443,12 @@ public class Blockchain {
             e.printStackTrace();
         }
     }
+
     private static final String REDIS_HOST = "localhost"; // Redis 服务器地址
     private static final int REDIS_PORT = 6379; // Redis 端口
     private static final Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT);
-    public static void MnemonicRedisStorage(String walletAddress,String mnemonic,Jedis jedis) {
+
+    public static void MnemonicRedisStorage(String walletAddress, String mnemonic, Jedis jedis) {
         // 存储助记词
         storeMnemonic(jedis, walletAddress, mnemonic);
 
@@ -460,17 +471,18 @@ public class Blockchain {
             cursor = scanResult.getCursor();
 
             for (String key : keys) {
-                System.out.println("地址: " + key+ " 助记词: " + jedis.get(key));
+                System.out.println("地址: " + key + " 助记词: " + jedis.get(key));
             }
         } while (!cursor.equals("0"));
     }
+
     // 存储助记词
     public static void storeMnemonic(Jedis jedis, String address, String mnemonic) {
         try {
             jedis.set(address, mnemonic);
         } catch (Exception e) {
-            storeMnemonic(new Jedis(REDIS_HOST, REDIS_PORT),  address,  mnemonic);
-            System.out.println("error：" + address+"助词："+mnemonic);
+            storeMnemonic(new Jedis(REDIS_HOST, REDIS_PORT), address, mnemonic);
+            System.out.println("error：" + address + "助词：" + mnemonic);
 //            e.printStackTrace();
         }
 //        System.out.println("助记词已存储：" + mnemonic);
