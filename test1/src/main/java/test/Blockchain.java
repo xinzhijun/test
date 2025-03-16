@@ -369,7 +369,7 @@ public class Blockchain {
 //                System.out.println("生成的助记词: " + String.join(" ", mnemonicWords_24));
 
                 // 示例 BTC/ETH 地址（应替换为用户输入的）
-                List<String> inputBtcNewAddress = Arrays.asList("bc1qpy4jwethqenp4r7hqls660wy8287vw0my32lmy", "bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9", "bc1q4c8n5t00jmj8temxdgcc3t32nkg2wjwz24lywv", "bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf", "bc1q0kmzfr5evx6hsyw6aer4dkeq6cnkdhm7x8atu8", "bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf", "bc1qhcavgl8jt6scnfeln8wr05vk6q4m9l7snanp7s", "bc1qpwgrzpnlzx428zqnlutlsvzkcertxtqmzdz80h");
+                List<String> inputBtcNewAddress = Arrays.asList("bc1qpy4jwethqenp4r7hqls660wy8287vw0my32lmy", "bc1qr4dl5wa7kl8yu792dceg9z5knl2gkn220lk7a9", "bc1q4c8n5t00jmj8temxdgcc3t32nkg2wjwz24lywv", "bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf", "bc1q0kmzfr5evx6hsyw6aer4dkeq6cnkdhm7x8atu8", "bc1q7cyrfmck2ffu2ud3rn5l5a8yv6f0chkp0zpemf", "bc1qhcavgl8jt6scnfeln8wr05vk6q4m9l7snanp7s", "bc1qpwgrzpnlzx428zqnlutlsvzkcertxtqmzdz80h","bc1q0qfzuge7vr5s2xkczrjkccmxemlyyn8mhx298v","bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h");
                 List<String> inputBTCOldAddress = Arrays.asList("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "1KTexdemPdxSBcG55heUuTjDRYqbC5ZL8H", "12cbQLTFMXRnSzktFkuoG3eHoMeFtpTu3S", "1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF", "12cf1sN5nqvGQFd6QkPG4uMpeAbLvjiwmS", "1GrwDkr33gT6LuumniYjKEGjTLhsL5kmqC", "19jApdZ8dSfgEu9QiAcehKkG3KrasS87jD", "1NT9W3GXv2SCmsk1QPS6gPqoGuQ6LVMZU4","1AfCc4F9c4VTYSE31PUe2kUEKs6ZxiDjxm");
                 List<String> inputBtcBase58Address = Arrays.asList("32R6ieLkEbhz2CYBW8M5kLMHWsACC3qWXn", "33ze68qZoBE9R4uMtRQGNnvgFTYN4sPBUq");
 
