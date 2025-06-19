@@ -123,7 +123,10 @@ public class Blockchain {
                 MnemonicRedisStorage(derivedBTCAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputBTCAddress) {
                     isBTCMatch = a.equalsIgnoreCase(derivedBTCAddress);
-                    System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, derivedBTCAddress));
+                    if(AddressSimilarity.matchRate(a, derivedBTCAddress.toString())>0.5){
+                        Mail163Sender();
+                        System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, derivedBTCAddress.toString())+" 生成地址"+a+"  目标地址"+derivedBTCAddress.toString());
+                    }
                     if (isBTCMatch) {
                         Mail163Sender();
                         System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "BTC:" + derivedBTCAddress);
@@ -135,7 +138,10 @@ public class Blockchain {
             if (inputETHAddress != null) {
                 MnemonicRedisStorage(derivedETHAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputETHAddress) {
-                    System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2)));
+                    if(AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))>0.5){
+                        Mail163Sender();
+                        System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))+" 生成地址"+a+"  目标地址"+derivedETHAddress.toString());
+                    }
                     isETHMatch = a.equalsIgnoreCase(derivedETHAddress);
                     if (isETHMatch) {
                         Mail163Sender();
@@ -147,7 +153,10 @@ public class Blockchain {
                 MnemonicRedisStorage(dd, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputETHAddress) {
                     isETHMatch = a.equalsIgnoreCase(dd);
-                    System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), dd.substring(2)));
+                    if(AddressSimilarity.matchRate(a.substring(2), dd.substring(2))>0.5){
+                        Mail163Sender();
+                        System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), dd.substring(2))+" 生成地址"+a+"  目标地址"+dd.toString());
+                    }
 
                     if (isETHMatch) {
                         Mail163Sender();
@@ -271,7 +280,11 @@ public class Blockchain {
 
 //        System.out.println("比特币地址: " + address.toString());
         for (String a : ads) {
-            System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, address.toString()));
+            if(AddressSimilarity.matchRate(a, address.toString())>0.5){
+                Mail163Sender();
+                System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, address.toString())+" 生成地址"+a+"  目标地址"+address.toString());
+            }
+
             if (a.equalsIgnoreCase(address.toString())) {
                 Mail163Sender();
                 System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech58:" + address.toString());
@@ -311,7 +324,10 @@ public class Blockchain {
                 return true;
             }
             for (String a : ads) {
-                System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, bech32Address.toString()));
+                if(AddressSimilarity.matchRate(a, bech32Address.toString())>0.5){
+                    Mail163Sender();
+                    System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, bech32Address.toString())+" 生成地址"+a+"  目标地址"+bech32Address.toString());
+                }
                 if (a.equalsIgnoreCase(bech32Address.toString())) {
                     System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech32:" + bech32Address.toString());
                     return true;
@@ -350,7 +366,10 @@ public class Blockchain {
             }
             // **Step 6: 输出地址**
             for (String a : ads) {
-                System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, p2shAddress.toString()));
+                if(AddressSimilarity.matchRate(a, p2shAddress.toString())>0.5){
+                    Mail163Sender();
+                    System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, p2shAddress.toString())+" 生成地址"+a+"  目标地址"+p2shAddress.toString());
+                }
                 if (a.equalsIgnoreCase(p2shAddress.toString())) {
                     System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "base58:" + p2shAddress.toString());
                     return true;
