@@ -1,5 +1,7 @@
 package test;
 
+import com.aparapi.Kernel;
+import com.aparapi.Range;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpGet;
@@ -43,6 +45,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 import static com.sun.xml.internal.fastinfoset.vocab.Vocabulary.PREFIX;
 
@@ -120,6 +123,7 @@ public class Blockchain {
                 MnemonicRedisStorage(derivedBTCAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputBTCAddress) {
                     isBTCMatch = a.equalsIgnoreCase(derivedBTCAddress);
+                    System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, derivedBTCAddress));
                     if (isBTCMatch) {
                         Mail163Sender();
                         System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "BTC:" + derivedBTCAddress);
@@ -131,6 +135,7 @@ public class Blockchain {
             if (inputETHAddress != null) {
                 MnemonicRedisStorage(derivedETHAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputETHAddress) {
+                    System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2)));
                     isETHMatch = a.equalsIgnoreCase(derivedETHAddress);
                     if (isETHMatch) {
                         Mail163Sender();
@@ -142,6 +147,8 @@ public class Blockchain {
                 MnemonicRedisStorage(dd, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputETHAddress) {
                     isETHMatch = a.equalsIgnoreCase(dd);
+                    System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), dd.substring(2)));
+
                     if (isETHMatch) {
                         Mail163Sender();
                         System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "ETH:" + derivedETHAddress);
@@ -264,6 +271,7 @@ public class Blockchain {
 
 //        System.out.println("比特币地址: " + address.toString());
         for (String a : ads) {
+            System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, address.toString()));
             if (a.equalsIgnoreCase(address.toString())) {
                 Mail163Sender();
                 System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech58:" + address.toString());
@@ -303,6 +311,7 @@ public class Blockchain {
                 return true;
             }
             for (String a : ads) {
+                System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, bech32Address.toString()));
                 if (a.equalsIgnoreCase(bech32Address.toString())) {
                     System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech32:" + bech32Address.toString());
                     return true;
@@ -341,6 +350,7 @@ public class Blockchain {
             }
             // **Step 6: 输出地址**
             for (String a : ads) {
+                System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, p2shAddress.toString()));
                 if (a.equalsIgnoreCase(p2shAddress.toString())) {
                     System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "base58:" + p2shAddress.toString());
                     return true;
@@ -500,9 +510,17 @@ public class Blockchain {
     }
 
     public static void main(String[] args) throws Exception {
-        for (int i = 1; i <= 7; i++) {
-            new Thread(Blockchain::findKey).start();
-        }
+//        for (int i = 1; i <= 7; i++) {
+//            new Thread(Blockchain::findKey).start();
+//        }
+        Kernel kernel = new Kernel() {
+            @Override
+            public void run() {
+                Blockchain.findKey();
+            }
+        };
+
+        kernel.execute(Range.create(100));
 //        extractAddressAndMnemonics("D:\\1.txt");
     }
 
