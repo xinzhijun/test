@@ -119,6 +119,7 @@ public class Blockchain {
                         btc03List.add(mnemonicWords);
                         if(btc03List.size()>1){
                              for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                                 if(newad.equals(mnemonicWords)) continue;
                                  verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
                              }
 
@@ -146,6 +147,7 @@ public class Blockchain {
                         etc03List.add(mnemonicWords);
                         if(etc03List.size()>1){
                             for(List<String> newad:generateCartesianMnemonics(etc03List)){
+                                if(newad.equals(mnemonicWords)) continue;
                                 verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
                             }
 
@@ -168,11 +170,12 @@ public class Blockchain {
                 for (String a : inputETHAddress) {
                     isETHMatch = a.equalsIgnoreCase(dd);
                     if(AddressSimilarity.matchRate(a.substring(2), dd.substring(2))>0.3){
-                        Mail163Sender();
+//                        Mail163Sender();
                         System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), dd.substring(2))+" 生成地址"+a+"  目标地址"+dd.toString());
                         etc03List.add(mnemonicWords);
                         if(etc03List.size()>1){
                             for(List<String> newad:generateCartesianMnemonics(etc03List)){
+                                if(newad.equals(mnemonicWords)) continue;
                                 verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
                             }
 
@@ -312,6 +315,7 @@ public class Blockchain {
                 btc03List.add(mnemonicWords);
                 if(btc03List.size()>1){
                     for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                        if(newad.equals(mnemonicWords)) continue;
                         GenerateP2PKH(newad,ads);
                     }
 
@@ -368,6 +372,7 @@ public class Blockchain {
                     btc03List.add(mnemonicWords);
                     if(btc03List.size()>1){
                         for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                            if(newad.equals(mnemonicWords)) continue;
                             GenerateBech32(newad,ads);
                         }
 
@@ -422,6 +427,7 @@ public class Blockchain {
                     btc03List.add(mnemonicWords);
                     if(btc03List.size()>1){
                         for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                            if(newad.equals(mnemonicWords)) continue;
                             RecoverP2SHAddress(newad,ads);
                         }
 
