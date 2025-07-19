@@ -29,9 +29,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +41,10 @@ import static com.sun.xml.internal.fastinfoset.vocab.Vocabulary.PREFIX;
  */
 public class Blockchain {
     // 生成指定长度的助记词（默认12词）
+    static List<List<String>> btc03List = new ArrayList<>();
+    static List<List<String>> btc05List = new ArrayList<>();
+    static List<List<String>> etc03List = new ArrayList<>();
+    static List<List<String>> etc05List = new ArrayList<>();
     public static List<String> generateMnemonic(int wordCount) throws Exception {
         int entropyLength = getEntropyLength(wordCount);
         byte[] entropy = new byte[entropyLength / 8];
@@ -112,8 +114,20 @@ public class Blockchain {
                 for (String a : inputBTCAddress) {
                     isBTCMatch = a.equalsIgnoreCase(derivedBTCAddress);
                     if(AddressSimilarity.matchRate(a, derivedBTCAddress.toString())>0.3){
-                        Mail163Sender();
+//                        Mail163Sender();
                         System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, derivedBTCAddress.toString())+" 生成地址"+a+"  目标地址"+derivedBTCAddress.toString());
+                        btc03List.add(mnemonicWords);
+                        if(btc03List.size()>1){
+                             for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                                 verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
+                             }
+
+                        }
+                    }
+                    if(AddressSimilarity.matchRate(a, derivedBTCAddress.toString())>0.5){
+                        Mail163Sender();
+                        System.out.println(mnemonicWords.toString()+"BTC 匹配率: " + AddressSimilarity.matchRate(a, derivedBTCAddress.toString())+" 生成地址"+a+"  目标地址"+derivedBTCAddress.toString());
+                        btc05List.add(mnemonicWords);
                     }
                     if (isBTCMatch) {
                         Mail163Sender();
@@ -127,8 +141,20 @@ public class Blockchain {
                 MnemonicRedisStorage(derivedETHAddress, mnemonicWords.toString(), new Jedis(REDIS_HOST, REDIS_PORT));
                 for (String a : inputETHAddress) {
                     if(AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))>0.3){
-                        Mail163Sender();
+//                        Mail163Sender();
                         System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))+" 生成地址"+a+"  目标地址"+derivedETHAddress.toString());
+                        etc03List.add(mnemonicWords);
+                        if(etc03List.size()>1){
+                            for(List<String> newad:generateCartesianMnemonics(etc03List)){
+                                verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
+                            }
+
+                        }
+                    }
+                    if(AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))>0.5){
+                        Mail163Sender();
+                        System.out.println(mnemonicWords.toString()+"ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))+" 生成地址"+a+"  目标地址"+derivedETHAddress.toString());
+                        etc05List.add(mnemonicWords);
                     }
                     isETHMatch = a.equalsIgnoreCase(derivedETHAddress);
                     if (isETHMatch) {
@@ -144,6 +170,18 @@ public class Blockchain {
                     if(AddressSimilarity.matchRate(a.substring(2), dd.substring(2))>0.3){
                         Mail163Sender();
                         System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), dd.substring(2))+" 生成地址"+a+"  目标地址"+dd.toString());
+                        etc03List.add(mnemonicWords);
+                        if(etc03List.size()>1){
+                            for(List<String> newad:generateCartesianMnemonics(etc03List)){
+                                verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
+                            }
+
+                        }
+                    }
+                    if(AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))>0.5){
+                        Mail163Sender();
+                        System.out.println(mnemonicWords.toString()+"ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))+" 生成地址"+a+"  目标地址"+derivedETHAddress.toString());
+                        etc05List.add(mnemonicWords);
                     }
 
                     if (isETHMatch) {
@@ -269,8 +307,20 @@ public class Blockchain {
 //        System.out.println("比特币地址: " + address.toString());
         for (String a : ads) {
             if(AddressSimilarity.matchRate(a, address.toString())>0.3){
-                Mail163Sender();
+//                Mail163Sender();
                 System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, address.toString())+" 生成地址"+a+"  目标地址"+address.toString());
+                btc03List.add(mnemonicWords);
+                if(btc03List.size()>1){
+                    for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                        GenerateP2PKH(newad,ads);
+                    }
+
+                }
+            }
+            if(AddressSimilarity.matchRate(a, address.toString())>0.5){
+                Mail163Sender();
+                System.out.println(mnemonicWords.toString()+"BTC 匹配率: " + AddressSimilarity.matchRate(a, address.toString())+" 生成地址"+a+"  目标地址"+address.toString());
+                btc05List.add(mnemonicWords);
             }
 
             if (a.equalsIgnoreCase(address.toString())) {
@@ -313,8 +363,20 @@ public class Blockchain {
             }
             for (String a : ads) {
                 if(AddressSimilarity.matchRate(a, bech32Address.toString())>0.3){
+//                    Mail163Sender();
+                    System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, bech32Address.toString())+" 生成地址"+a+"  目标地址"+bech32Address.toString());
+                    btc03List.add(mnemonicWords);
+                    if(btc03List.size()>1){
+                        for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                            GenerateBech32(newad,ads);
+                        }
+
+                    }
+                }
+                if(AddressSimilarity.matchRate(a, bech32Address.toString())>0.5){
                     Mail163Sender();
                     System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, bech32Address.toString())+" 生成地址"+a+"  目标地址"+bech32Address.toString());
+                    btc05List.add(mnemonicWords);
                 }
                 if (a.equalsIgnoreCase(bech32Address.toString())) {
                     System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "Bech32:" + bech32Address.toString());
@@ -355,8 +417,20 @@ public class Blockchain {
             // **Step 6: 输出地址**
             for (String a : ads) {
                 if(AddressSimilarity.matchRate(a, p2shAddress.toString())>0.3){
-                    Mail163Sender();
+//                    Mail163Sender();
                     System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, p2shAddress.toString())+" 生成地址"+a+"  目标地址"+p2shAddress.toString());
+                    btc03List.add(mnemonicWords);
+                    if(btc03List.size()>1){
+                        for(List<String> newad:generateCartesianMnemonics(btc03List)){
+                            RecoverP2SHAddress(newad,ads);
+                        }
+
+                    }
+                }
+                if(AddressSimilarity.matchRate(a, p2shAddress.toString())>0.5){
+                    Mail163Sender();
+                    System.out.println(mnemonicWords.toString()+"BTC 匹配率: " + AddressSimilarity.matchRate(a, p2shAddress.toString())+" 生成地址"+a+"  目标地址"+p2shAddress.toString());
+                    btc05List.add(mnemonicWords);
                 }
                 if (a.equalsIgnoreCase(p2shAddress.toString())) {
                     System.out.println("✅ 登录验证成功！mnemonicWords:" + mnemonicWords + "base58:" + p2shAddress.toString());
@@ -552,6 +626,40 @@ public class Blockchain {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static List<List<String>> generateCartesianMnemonics(List<List<String>> wordGroups) {
+        int wordCount = wordGroups.get(0).size(); // e.g. 12 words
+        List<Set<String>> positionWords = new ArrayList<>();
+
+        // 初始化每个位置集合
+        for (int i = 0; i < wordCount; i++) {
+            positionWords.add(new HashSet<>());
+        }
+
+        // 收集每个位置的所有单词
+        for (List<String> words : wordGroups) {
+            for (int i = 0; i < wordCount; i++) {
+                positionWords.get(i).add(words.get(i));
+            }
+        }
+
+        // 做笛卡尔积
+        List<List<String>> result = new ArrayList<>();
+        cartesianHelper(positionWords, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private static void cartesianHelper(List<Set<String>> input, int depth, List<String> current, List<List<String>> output) {
+        if (depth == input.size()) {
+            output.add(new ArrayList<>(current));
+            return;
+        }
+        for (String word : input.get(depth)) {
+            current.add(word);
+            cartesianHelper(input, depth + 1, current, output);
+            current.remove(current.size() - 1);
         }
     }
 
