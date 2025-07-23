@@ -119,10 +119,12 @@ public class Blockchain {
                         System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, derivedBTCAddress.toString())+" 生成地址"+a+"  目标地址"+derivedBTCAddress.toString());
                         btc03List.add(mnemonicWords);
                         if(btc03List.size()>1){
-                             for(List<String> newad:generateCartesianMnemonics(btc03List)){
-                                 if(newad.equals(mnemonicWords)) continue;
-                                 verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
-                             }
+                            generateCartesianMnemonicsStream(btc03List, newad -> {
+                                 if(newad.equals(mnemonicWords)) {
+                                     return false;
+                                 }
+                                 return verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
+                             });
 
                         }
                     }
@@ -147,10 +149,10 @@ public class Blockchain {
                         System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), derivedETHAddress.substring(2))+" 生成地址"+a+"  目标地址"+derivedETHAddress.toString());
                         etc03List.add(mnemonicWords);
                         if(etc03List.size()>1){
-                            for(List<String> newad:generateCartesianMnemonics(etc03List)){
-                                if(newad.equals(mnemonicWords)) continue;
-                                verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
-                            }
+                            generateCartesianMnemonicsStream(etc03List,newad->{
+                                if(newad.equals(mnemonicWords)) return false;
+                                return verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
+                            });
 
                         }
                     }
@@ -175,10 +177,10 @@ public class Blockchain {
                         System.out.println("ETH 匹配率: " + AddressSimilarity.matchRate(a.substring(2), dd.substring(2))+" 生成地址"+a+"  目标地址"+dd.toString());
                         etc03List.add(mnemonicWords);
                         if(etc03List.size()>1){
-                            for(List<String> newad:generateCartesianMnemonics(etc03List)){
-                                if(newad.equals(mnemonicWords)) continue;
-                                verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
-                            }
+                            generateCartesianMnemonicsStream(etc03List,newad->{
+                                if(newad.equals(mnemonicWords)) return false;
+                                return verifyWalletLogin(newad,inputBTCAddress,inputETHAddress);
+                            });
 
                         }
                     }
@@ -315,10 +317,10 @@ public class Blockchain {
                 System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, address.toString())+" 生成地址"+a+"  目标地址"+address.toString());
                 btc03List.add(mnemonicWords);
                 if(btc03List.size()>1){
-                    for(List<String> newad:generateCartesianMnemonics(btc03List)){
-                        if(newad.equals(mnemonicWords)) continue;
-                        GenerateP2PKH(newad,ads);
-                    }
+                    generateCartesianMnemonicsStream(btc03List,newad->{
+                        if(newad.equals(mnemonicWords)) return false;
+                        return GenerateP2PKH(newad,ads);
+                    });
 
                 }
             }
@@ -372,10 +374,10 @@ public class Blockchain {
                     System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, bech32Address.toString())+" 生成地址"+a+"  目标地址"+bech32Address.toString());
                     btc03List.add(mnemonicWords);
                     if(btc03List.size()>1){
-                        for(List<String> newad:generateCartesianMnemonics(btc03List)){
-                            if(newad.equals(mnemonicWords)) continue;
-                            GenerateBech32(newad,ads);
-                        }
+                        generateCartesianMnemonicsStream(btc03List,newad->{
+                            if(newad.equals(mnemonicWords)) return false;
+                            return GenerateBech32(newad,ads);
+                        });
 
                     }
                 }
@@ -427,10 +429,10 @@ public class Blockchain {
                     System.out.println("BTC 匹配率: " + AddressSimilarity.matchRate(a, p2shAddress.toString())+" 生成地址"+a+"  目标地址"+p2shAddress.toString());
                     btc03List.add(mnemonicWords);
                     if(btc03List.size()>1){
-                        for(List<String> newad:generateCartesianMnemonics(btc03List)){
-                            if(newad.equals(mnemonicWords)) continue;
-                            RecoverP2SHAddress(newad,ads);
-                        }
+                        generateCartesianMnemonicsStream(btc03List,newad->{
+                            if(newad.equals(mnemonicWords)) return false;
+                            return RecoverP2SHAddress(newad,ads);
+                        });
 
                     }
                 }
@@ -636,39 +638,52 @@ public class Blockchain {
         }
     }
 
-    public static List<List<String>> generateCartesianMnemonics(List<List<String>> wordGroups) {
-        int wordCount = wordGroups.get(0).size(); // e.g. 12 words
+    public static void generateCartesianMnemonicsStream(List<List<String>> wordGroups, MnemonicProcessor processor) {
+        int wordCount = wordGroups.get(0).size();
         List<Set<String>> positionWords = new ArrayList<>();
 
-        // 初始化每个位置集合
         for (int i = 0; i < wordCount; i++) {
             positionWords.add(new HashSet<>());
         }
 
-        // 收集每个位置的所有单词
         for (List<String> words : wordGroups) {
             for (int i = 0; i < wordCount; i++) {
                 positionWords.get(i).add(words.get(i));
             }
         }
 
-        // 做笛卡尔积
-        List<List<String>> result = new ArrayList<>();
-        cartesianHelper(positionWords, 0, new ArrayList<>(), result);
-        System.out.println(new Gson().toJson(result));
-        return result;
+        try {
+            cartesianHelperStream(positionWords, 0, new ArrayList<>(), processor);
+        } catch (StopIteration e) {
+            System.out.println("✅ Early stop: matching mnemonic found.");
+        }
     }
 
-    private static void cartesianHelper(List<Set<String>> input, int depth, List<String> current, List<List<String>> output) {
+
+    private static void cartesianHelperStream(List<Set<String>> input, int depth, List<String> current, MnemonicProcessor processor) {
         if (depth == input.size()) {
-            output.add(new ArrayList<>(current));
+            if (processor.process(current)) {
+                throw new StopIteration();
+            }
             return;
         }
+
         for (String word : input.get(depth)) {
             current.add(word);
-            cartesianHelper(input, depth + 1, current, output);
+            cartesianHelperStream(input, depth + 1, current, processor);
             current.remove(current.size() - 1);
         }
+    }
+
+    public interface MnemonicProcessor {
+        /**
+         * @param mnemonic 当前组合（一个 12 词助记词）
+         * @return true to stop early, false to continue
+         */
+        boolean process(List<String> mnemonic);
+    }
+
+    public static class StopIteration extends RuntimeException {
     }
 
 }
