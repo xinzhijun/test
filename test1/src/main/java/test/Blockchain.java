@@ -4,6 +4,7 @@ import com.aparapi.Kernel;
 import com.aparapi.Range;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -654,6 +655,7 @@ public class Blockchain {
         // 做笛卡尔积
         List<List<String>> result = new ArrayList<>();
         cartesianHelper(positionWords, 0, new ArrayList<>(), result);
+        System.out.println(new Gson().toJson(result));
         return result;
     }
 
